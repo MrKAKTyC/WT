@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Theater</title>
+    <link
+      href="https://unpkg.com/video.js/dist/video-js.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/video.js/dist/video.min.js"></script>
+    <script src="js/theater.js" defer></script>
+    <!-- <link href="css/theater.css" rel="stylesheet" /> -->
+    <style>
+      #video-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 500px;
+      }
+      .readyBtn {
+        height: 20rem;
+        width: 40rem;
+        display: inline-block;
+        border-radius: 30px;
+        background-color: #8bc34a;
+        color: #fff;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+      }
+      .hidden {
+        display: none;
+      }
+      .container {
+        display: flex;
+        justify-content: center;
+      }
+
+      .readyBtn:hover {
+        background-color: #689f38;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <button class="readyBtn">Ready</button>
+      <div class="theater hidden">
+        <div id="video-container">
+          <video
+            id="video-player"
+            class="video-js vjs-default-skin"
+            controls
+            preload="auto"
+          ></video>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
