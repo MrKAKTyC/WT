@@ -6,7 +6,7 @@ function start(port) {
   const app = express();
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
-  app.use(express.static("server/app/static"));
+  app.use(express.static("app/static"));
 
   app.get("/api/room/:room", joinRoomHandler);
 
