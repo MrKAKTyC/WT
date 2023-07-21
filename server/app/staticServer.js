@@ -1,45 +1,35 @@
-const http = require("http");
-const fs = require("fs");
-const path = require("path");
+const express = require("express");
+const bodyParser = require("body-parser");
+const { RoomService } = require("./service/room");
 
 function start(port) {
-  const server = http.createServer((req, res) => {
-    // Extract the file path from the request URL
-    const reqURL = new URL(req.url, `http://${req.headers.host}`);
+  const app = express();
+  app.use(bodyParser.urlencoded({ extended: true }));
+  app.use(bodyParser.json());
+  app.use(express.static("server/app/static"));
 
-    const filePath = path.join(__dirname, reqURL.pathname);
-    console.log(`FP: ${filePath}`);
+  app.get("/api/room/:room", joinRoomHandler);
 
-    // Check if the file exists
-    fs.access(filePath, fs.constants.F_OK, (err) => {
-      if (err) {
-        // File not found
-        res.statusCode = 404;
-        res.end("File not found");
-        return;
-      }
+  app.post("/api/room/", createRoomHandler);
 
-      // Read the file and send it as the response
-      fs.readFile(filePath, (err, data) => {
-        if (err) {
-          // Error reading the file
-          res.statusCode = 500;
-          res.end("Error reading file");
-          return;
-        }
-        // Set the appropriate content type in the response header
-        res.setHeader("Content-Type", "text/html");
-
-        // Send the file content as the response
-        res.statusCode = 200;
-        res.end(data);
-      });
-    });
-  });
-
-  server.listen(port, () => {
-    console.log(`Server running on port ${port}`);
+  app.listen(port, () => {
+    console.log(`Example app listening on port ${port}`);
   });
 }
 
+const createRoomHandler = (req, res) => {
+  const source = req.body?.source;
+  if (!source) {
+    res.status(400).send(`Bad Request '${source}'`);
+    return;
+  }
+  const roomId = RoomService.createRoom(req.body?.source);
+  console.log(`Room ${roomId} with source ${source} created`);
+  res.json({ roomId, source });
+};
+
+const joinRoomHandler = (req, res) => {
+  const roomData = RoomService.getRoom(req.params["room"]);
+  res.json(roomData);
+};
 module.exports = { start };

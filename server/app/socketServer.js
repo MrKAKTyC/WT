@@ -1,5 +1,5 @@
 const WebSocket = require("ws");
-const { RoomService } = require("./service/looby");
+const { RoomService } = require("./service/room");
 
 const start = (port) => {
   const allSockets = [];
@@ -12,23 +12,16 @@ const start = (port) => {
   wss.on("connection", (ws) => {
     console.log("New client connected");
     allSockets.push(ws);
-    // const currentRoom = RoomService.joinRoom(generalRoom, ws);
-
-    ws.on("message", (message) => {
-      console.log(`Received command: ${message}. Sending it to all users`);
-      allSockets.forEach((member) => {
-        if (member !== ws && member.readyState === WebSocket.OPEN) {
-          member.send(message, { binary: false });
-        }
-      });
-    });
-
-    ws.on("close", () => {
-      console.log("Client disconnected");
-      allSockets.filter((member) => {
-        return member != ws;
-      });
-    });
+    const joinListener = (message) => {
+      const { command, payload } = JSON.parse(message);
+      if (command !== "join") {
+        return;
+      }
+      console.log(`Received command: ${message}`);
+      ws.off("message", joinListener);
+      RoomService.joinRoom(payload.room, ws);
+    };
+    ws.on("message", joinListener);
   });
 };
 

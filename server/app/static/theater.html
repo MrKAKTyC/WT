@@ -16,8 +16,18 @@
         align-items: center;
         height: 500px;
       }
-      .readyBtn {
+      .welcome {
         height: 20rem;
+        display: flex;
+        justify-content: space-around;
+        flex-direction: column;
+      }
+      .username {
+        height: 5rem;
+        border-radius: 30px;
+      }
+      .readyBtn {
+        height: 5rem;
         width: 40rem;
         display: inline-block;
         border-radius: 30px;
@@ -43,7 +53,10 @@
   </head>
   <body>
     <div class="container">
-      <button class="readyBtn">Ready</button>
+      <div class="welcome">
+        <input class="username" placeholder="Username" />
+        <button class="readyBtn">Ready</button>
+      </div>
       <div class="theater hidden">
         <div id="video-container">
           <video
